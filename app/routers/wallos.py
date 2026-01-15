@@ -10,7 +10,18 @@ async def test_connection(request: TestConnectionRequest):
     url = f"{request.wallos_host_url.rstrip('/')}/api/subscriptions/get_subscriptions.php"
     
     async with httpx.AsyncClient() as client:
-        response = await client.get(url, params={"apiKey": request.api_key})
+        try:
+            response = await client.get(url, params={"apiKey": request.api_key})
+        except httpx.ConnectError:
+            return {
+                "success": False,
+                "message": "Could not connect to Wallos. Check your URL."
+            }
+        except httpx.TimeoutException:
+            return {
+                "success": False,
+                "message": "Connection to Wallos timed out."
+            }
         
     if response.status_code != 200:
         return {"success": False, "message": "Failed to connect to Wallos API."}
