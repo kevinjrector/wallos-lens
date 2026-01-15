@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from app.routers import wallos
+from app.database import create_tables
+
+create_tables()
 
 app = FastAPI()
 

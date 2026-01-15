@@ -2,6 +2,8 @@ import httpx
 
 from fastapi import APIRouter
 from app.schemas.wallos import TestConnectionRequest
+from sqlalchemy.orm import Session
+
 
 router = APIRouter()
 
