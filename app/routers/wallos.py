@@ -1,14 +1,15 @@
 import httpx
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.wallos import TestConnectionRequest
 from sqlalchemy.orm import Session
+from app.database import get_db
 
 
 router = APIRouter()
 
 @router.post("/test_connection")
-async def test_connection(request: TestConnectionRequest):
+async def test_connection(request: TestConnectionRequest, db: Session = Depends(get_db)):
     url = f"{request.wallos_host_url.rstrip('/')}/api/subscriptions/get_subscriptions.php"
     
     async with httpx.AsyncClient() as client:
