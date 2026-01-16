@@ -1,9 +1,15 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
+import os
+from dotenv import load_dotenv
 
-DATABASE_URL = "sqlite:///./wallos_lens.db"
+load_dotenv()
 
-engine = sa.create_engine(DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable not set")
+
+engine = sa.create_engine(DATABASE_URL, echo=True)
 
 class Base(DeclarativeBase):
     pass
