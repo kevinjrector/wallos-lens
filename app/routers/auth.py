@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.schemas.auth import LoginRequest, RegisterRequest
 from app.database import get_db
 from app.models.user import User
-from app.auth import hash_password, verify_password, create_access_token
+from app.auth import hash_password, verify_password, create_access_token, get_currrent_user
 
 router = APIRouter()
 
@@ -43,4 +43,12 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         "message": "Login successful",
         "access_token": access_token,
         "token_type": "bearer"
+    }
+    
+@router.get("/me")
+def get_current_user_info(current_user: User = Depends(get_currrent_user)):
+    """Get information about the current authenticated user."""
+    return {
+        "user_id": current_user.id,
+        "username": current_user.username
     }
